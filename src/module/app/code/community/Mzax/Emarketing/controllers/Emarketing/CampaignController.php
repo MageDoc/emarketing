@@ -817,6 +817,10 @@ class Mzax_Emarketing_Emarketing_CampaignController extends Mzax_Emarketing_Cont
      */
     public function templateHtmlAction()
     {
+        if (function_exists('newrelic_disable_autorum')){
+            newrelic_disable_autorum();
+        }
+
         $response = new Varien_Object();
         $response->setError(false);
 

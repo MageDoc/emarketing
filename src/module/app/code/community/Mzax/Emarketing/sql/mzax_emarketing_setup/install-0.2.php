@@ -173,8 +173,8 @@ $recipientAddressTable = $connection->newTable($installer->getTable('mzax_emarke
     ->addColumn('address',        Varien_Db_Ddl_Table::TYPE_TEXT, $varchar, $req, 'Address (Can be an email or real address)')
     ->addColumn('exists',         Varien_Db_Ddl_Table::TYPE_BOOLEAN, null,  $req, 'Exists or has bounced')
     ->addColumn('view_id',        Varien_Db_Ddl_Table::TYPE_INTEGER, null,  $opt, 'Last detected view event id')
-    ->setOption('charset', ' ascii')
-    ->setOption('collate', 'ascii_bin')
+    ->setOption('charset', 'utf8')
+    ->setOption('collate', 'utf8_general_ci	')
     ->addIndex('UNQ_ADDRESS', array('address'), $uniqueIndex);
 
 $connection->dropTable($recipientAddressTable->getName());

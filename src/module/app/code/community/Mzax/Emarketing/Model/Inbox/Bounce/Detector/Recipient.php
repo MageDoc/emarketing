@@ -42,7 +42,8 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
      *
      * @var string
      */
-    const LINK_REGEX = '!\/link-goto\/([a-zA-Z0-9]{16})!';
+    const LINK_REGEX = '!\/link-goto\/([a-zA-Z0-9]{8,16})!';
+    const LINK_REGEX_SHORT = '!\/go\/([a-zA-Z0-9]{8,16})!';
 
     /**
      * Try to detect unique beacon hash
@@ -82,6 +83,8 @@ class Mzax_Emarketing_Model_Inbox_Bounce_Detector_Recipient
         $content = $message->getContent();
 
         if (preg_match(self::LINK_REGEX, $content, $matches)) {
+            return $matches[1];
+        } else if (preg_match(self::LINK_REGEX_SHORT, $content, $matches)) {
             return $matches[1];
         }
         return false;

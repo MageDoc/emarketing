@@ -109,7 +109,7 @@ class Mzax_Emarketing_Model_Resource_Link_Reference extends Mage_Core_Model_Reso
      */
     public function captureClick(Mzax_Emarketing_Model_Link_Reference $reference, $eventId = null)
     {
-        if ($reference->getId()) {
+        if (!$reference->getId()) {
             return 0;
         }
 

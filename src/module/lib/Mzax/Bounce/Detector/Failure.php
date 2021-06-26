@@ -66,7 +66,7 @@ class Mzax_Bounce_Detector_Failure extends Mzax_Bounce_Detector_Abstract
             $data = preg_replace('/^\s*\n/m', '', $data);
             $data = trim($data);
 
-            $data = preg_split('/^\[([0-9.]+)\](?:\s*([0-9+-]+))$/m', $data, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+            $data = preg_split('/\[([0-9.]+)\](?:\s*([0-9+-]+))/m', $data, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
             //var_dump($data); exit;
             $phrases = array();
             for ($i = 0; $i< count($data); $i+=3) {

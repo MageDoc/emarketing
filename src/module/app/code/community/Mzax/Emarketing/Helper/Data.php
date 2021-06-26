@@ -118,10 +118,11 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
      * Create a compressed random hash using a extra seed
      *
      * @param string $seed
+     * @param int $compression
      *
      * @return string
      */
-    public function randomHash($seed)
+    public function randomHash($seed, $compression = 2)
     {
         $hash = md5(
             $seed .
@@ -129,7 +130,7 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
             microtime()
         );
 
-        return $this->compressHash($hash);
+        return $this->compressHash($hash, $compression);
     }
 
     /**
@@ -140,9 +141,9 @@ class Mzax_Emarketing_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return string
      */
-    public function compressHash($hash)
+    public function compressHash($hash, $compression = 2)
     {
-        $parts = str_split($hash, 2);
+        $parts = str_split($hash, $compression);
 
         $base = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXQZ';
         $baseLength = strlen($base);

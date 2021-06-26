@@ -225,7 +225,7 @@ class Mzax_Emarketing_Model_Medium_Email_Composer
      *
      * @return Mzax_Emarketing_Model_Medium_Email_Processor
      */
-    public function getTemplateProcessor()
+    public function  getTemplateProcessor()
     {
         $store = $this->getRecipient()->getStore();
 

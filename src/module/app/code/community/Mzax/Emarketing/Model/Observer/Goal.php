@@ -121,7 +121,13 @@ class Mzax_Emarketing_Model_Observer_Goal
 
         if (!empty($data)) {
             /* @see Mzax_Emarketing_Model_Resource_Goal */
-            Mage::getResourceModel('mzax_emarketing/goal')->insertMultiple($data);
+            try {
+                Mage::getResourceModel('mzax_emarketing/goal')->insertMultiple($data);
+            } catch (Exception $e) {
+                Mage::logException($e);
+                Mage::log('Failed to save goal conversion', null, 'mzax_goal.log');
+                Mage::log($data, null, 'mzax_goal.log');
+            }
         }
     }
 

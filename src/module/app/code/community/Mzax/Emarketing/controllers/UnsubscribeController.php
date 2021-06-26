@@ -51,7 +51,7 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
 
         $email = $session->getLastAddress();
         if (!Zend_Validate::is($email, 'EmailAddress') || $this->getSession()->getIsUnsubscribed()) {
-            return $this->_redirectUrl('/');
+            return $this->_redirectUrl('/customer/account/login/');
         }
 
         $this->getSession()->setFormKey(Mage::helper('core')->getRandomString(32));
@@ -68,11 +68,12 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
     public function updateAction()
     {
         $session = $this->getSession();
+        $coreSession = $this->_sessionManager->getCoreSession();
         $request = $this->getRequest();
 
         if ($request->isPost()) {
             do {
-                if ($request->getPost('form_key') !== $session->getFormKey()) {
+                if ($request->getPost('form_key') !== $coreSession->getFormKey()) {
                     break;
                 }
                 $email = $request->getPost('email');
@@ -121,11 +122,12 @@ class Mzax_Emarketing_UnsubscribeController extends Mage_Core_Controller_Front_A
     public function doAction()
     {
         $session = $this->getSession();
+        $coreSession = $this->_sessionManager->getCoreSession();
         $request = $this->getRequest();
 
         if ($request->isPost()) {
             do {
-                if ($request->getPost('form_key') !== $session->getFormKey()) {
+                if ($request->getPost('form_key') !== $coreSession->getFormKey()) {
                     break;
                 }
                 $email = $request->getPost('email');

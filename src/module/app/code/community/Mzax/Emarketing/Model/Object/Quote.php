@@ -57,6 +57,12 @@ class Mzax_Emarketing_Model_Object_Quote extends Mzax_Emarketing_Model_Object_Ab
         $query->addBinding('customer_id', 'customer_id');
         $query->addBinding('email', 'customer_email');
 
+        $query->joinTableLeft(
+            array('quote_id', 'address_type' => new Zend_Db_Expr('"shipping"')),
+            'sales/quote_address',
+            'shipping_address');
+        $query->addBinding('telephone', 'shipping_address.telephone');
+
         return $query;
     }
 
@@ -74,6 +80,7 @@ class Mzax_Emarketing_Model_Object_Quote extends Mzax_Emarketing_Model_Object_Ab
         $collection->addField('updated_at');
         $collection->addField('customer_id');
         $collection->addField('email');
+        $collection->addField('telephone');
     }
 
     /**
@@ -107,6 +114,11 @@ class Mzax_Emarketing_Model_Object_Quote extends Mzax_Emarketing_Model_Object_Ab
         $grid->addColumn('email', array(
             'header'     => $this->__('Email'),
             'index'      => 'email'
+        ));
+
+        $grid->addColumn('telephone', array(
+            'header'     => $this->__('Telephone'),
+            'index'      => 'telephone'
         ));
 
         $grid->addColumn('created_at', array(

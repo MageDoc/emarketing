@@ -123,6 +123,8 @@ class Mzax_Emarketing_Model_Recipient_Provider_Order
                 $recipient->setEmail($customer->getEmail());
             }
         }
+
+        $recipient->setTelephone($order->getShippingAddress()->getTelephone());
     }
 
     /**

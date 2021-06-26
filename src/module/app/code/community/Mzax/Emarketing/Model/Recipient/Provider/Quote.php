@@ -92,6 +92,7 @@ class Mzax_Emarketing_Model_Recipient_Provider_Quote
         $recipient->setQuote($quote);
         $recipient->setEmail($quote->getCustomerEmail());
         $recipient->setName($quote->getCustomerName());
+        $recipient->setTelephone($quote->getBillingAddress()->getTelephone());
 
         if ($quote->getCustomerId()) {
             /* @var $customer Mage_Customer_Model_Customer */

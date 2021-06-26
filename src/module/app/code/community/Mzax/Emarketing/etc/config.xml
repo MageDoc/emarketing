@@ -20,7 +20,7 @@
 <config>
     <modules>
         <Mzax_Emarketing>
-            <version>0.5.1</version>
+            <version>0.5.2</version>
         </Mzax_Emarketing>
     </modules>
     <global>
@@ -70,6 +70,10 @@
                 <from><![CDATA[#^/link-goto/#]]></from>
                 <to><![CDATA[/mzax_emarketing/link/goto/hash/]]></to>
             </mzax_emarketing_goto>
+            <mzax_emarketing_goto_short>
+                <from><![CDATA[#^/go/#]]></from>
+                <to><![CDATA[/mzax_emarketing/link/goto/hash/]]></to>
+            </mzax_emarketing_goto_short>
             <mzax_emarketing_beacon>
                 <from><![CDATA[#^/emarketing\-media/([0-9a-zA-Z]+)/logo\.gif$#]]></from>
                 <to><![CDATA[/mzax_emarketing/beacon/image/hash/$1]]></to>
@@ -134,8 +138,24 @@
                             <title>File System (no emails, for debug only)</title>
                             <class>mzax_emarketing/outbox_transporter_file</class>
                         </file>
+                        <magedoc_sms>
+                            <title>MageDoc SMS Gateway</title>
+                            <class>mzax_emarketing/outbox_transporter_magedocSms</class>
+                        </magedoc_sms>
+                        <magedoc_viber>
+                            <title>MageDoc Viber Gateway</title>
+                            <class>mzax_emarketing/outbox_transporter_magedocViber</class>
+                        </magedoc_viber>
                     </transporters>
                 </email>
+                <sms>
+                    <title>SMS</title>
+                    <class>mzax_emarketing/medium_sms</class>
+                </sms>
+                <viber>
+                    <title>Viber</title>
+                    <class>mzax_emarketing/medium_viber</class>
+                </viber>
             </mediums>
             <filters>
                 <combine><model>mzax_emarketing/object_filter_combine</model></combine>
@@ -170,6 +190,7 @@
                 <addrass_postcode><model>mzax_emarketing/object_filter_address_postcode</model></addrass_postcode>
                 <addrass_region><model>mzax_emarketing/object_filter_address_region</model></addrass_region>
                 <addrass_country><model>mzax_emarketing/object_filter_address_country</model></addrass_country>
+                <addrass_telephone><model>mzax_emarketing/object_filter_address_telephone</model></addrass_telephone>
                 <product_category><model>mzax_emarketing/object_filter_product_category</model></product_category>
                 <product_attribute><model>mzax_emarketing/object_filter_product_attribute</model></product_attribute>
                 <campaign_goal><model>mzax_emarketing/object_filter_campaign_goal</model></campaign_goal>

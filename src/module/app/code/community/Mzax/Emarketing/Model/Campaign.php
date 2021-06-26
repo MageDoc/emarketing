@@ -680,6 +680,7 @@ class Mzax_Emarketing_Model_Campaign
 
         $this->setVariationId(Mzax_Emarketing_Model_Campaign_Variation::ORIGNAL);
         $active = array($this);
+        //$active = array();
 
         /* @var $variation Mzax_Emarketing_Model_Campaign_Variation */
         foreach ($this->getVariations() as $variation) {

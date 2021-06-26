@@ -27,6 +27,8 @@
  */
 abstract class Mzax_Emarketing_Model_Medium_Abstract
 {
+    protected $_linkCompression = 2;
+
     /**
      * Unique Medium ID
      *
@@ -42,7 +44,28 @@ abstract class Mzax_Emarketing_Model_Medium_Abstract
      */
     abstract public function sendRecipient(Mzax_Emarketing_Model_Recipient $recipient);
 
+    /**
+     * Defines the power of link compression
+     * Compress a 32 char hex hash to a 16 char asci hash
+     * without loosing to much of "uniqueness"
+     *
+     * @return integer
+     */
 
+    public function getLinkCompression()
+    {
+        return $this->_linkCompression;
+    }
+
+    public function getLinkPrefix()
+    {
+        return Mzax_Emarketing_Model_Link_Reference::DEFAULT_LINK_PREFIX;
+    }
+
+    public function getUtmMedium()
+    {
+        return $this->getMediumId();
+    }
 
     public function prepareRecipientGrid(Mzax_Emarketing_Block_Campaign_Edit_Tab_Recipients_Grid $grid)
     {

@@ -138,6 +138,7 @@ class Mzax_Bounce_Detector_Autoreply extends Mzax_Bounce_Detector_Abstract
         // bit more aggressive, check the actual content
         $body = $message->asString();
         $body = preg_replace('/[\s]+/', ' ', $body);
+        $body = explode($body, ' ');
 
         foreach ($body as $needle) {
             if (stripos($subject, $needle) === 0) {

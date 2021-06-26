@@ -90,6 +90,13 @@ class Mzax_Emarketing_Model_Object_Order extends Mzax_Emarketing_Model_Object_Ab
         $collection->addField('increment_id');
         $collection->addField('customer_id');
         $collection->addField('email');
+
+        $collection->getQuery()->joinTableLeft(
+            array(array('parent_id' => 'entity_id'), 'address_type' => new Zend_Db_Expr('"shipping"')),
+            'sales/order_address',
+            'shipping_address');
+        $collection->getQuery()->addBinding('telephone', 'shipping_address.telephone');
+        $collection->addField('telephone');
     }
 
     /**
@@ -130,6 +137,11 @@ class Mzax_Emarketing_Model_Object_Order extends Mzax_Emarketing_Model_Object_Ab
         $grid->addColumn('email', array(
             'header' => Mage::helper('sales')->__('Email'),
             'index' => 'email'
+        ));
+
+        $grid->addColumn('telephone', array(
+            'header'     => $this->__('Telephone'),
+            'index'      => 'telephone'
         ));
 
         $grid->addColumn('created_at', array(

@@ -293,7 +293,7 @@ class Mzax_Emarketing_Block_Template extends Mage_Core_Block_Template
                    ->constrainOnly(true)
                    ->keepAspectRatio(true)
                    ->keepFrame(false)
-                   ->setQuality(40)
+                   ->setQuality(80)
                    ->resize($size, $size);
         }
 

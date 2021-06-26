@@ -579,7 +579,16 @@ class Mzax_Emarketing_Model_Outbox_Email extends Mzax_Emarketing_Model_Email
         /** @var Mzax_Emarketing_Model_Outbox_Transporter $factory */
         $factory = Mage::getSingleton('mzax_emarketing/outbox_transporter');
 
-        $transporter = $this->_config->get('mzax_emarketing/email/transporter', $store);
+        switch ($this->getCampaign()->getMedium()->getMediumId()) {
+            case 'sms':
+                $transporter = 'magedoc_sms';
+                break;
+            case 'viber':
+                $transporter = 'magedoc_viber';
+                break;
+            default:
+                $transporter = $this->_config->get('mzax_emarketing/email/transporter', $store);
+        }
         $transporter = $factory->factory($transporter);
         $transporter->setup($this);
 

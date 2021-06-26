@@ -17,10 +17,15 @@
  */
 
 /**
- * Class Mzax_Emarketing_Model_Medium_Email
+ * Class Mzax_Emarketing_Model_Medium_Sms
  */
-class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Abstract
+class Mzax_Emarketing_Model_Medium_Sms extends Mzax_Emarketing_Model_Medium_Email
 {
+    const TELEPHONE_REGEXP = '/^\+?[0-9]{10,12}$/';
+
+    protected $_linkCompression = 4;
+    protected $_defaultTransporter = 'magedoc_sms';
+
     /**
      * Retrieve medium id
      *
@@ -28,35 +33,17 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
      */
     public function getMediumId()
     {
-        return 'email';
+        return 'sms';
     }
 
-    /**
-     * Prepare snippets
-     *
-     * @param Mzax_Emarketing_Model_Medium_Email_Snippets $snippets
-     *
-     * @return void
-     */
-    public function prepareSnippets(Mzax_Emarketing_Model_Medium_Email_Snippets $snippets)
+    public function getLinkPrefix()
     {
-        $hlp = Mage::helper('mzax_emarketing');
+        return 'go/';
+    }
 
-        $snippets->addVar('url.unsubscribe', $hlp->__('Unsubscribe link'));
-        $snippets->addVar('url.browser_view', $hlp->__('View in browser link'));
-        $snippets->addVar('subject', $hlp->__('Email Subject'));
-        $snippets->addVar('address', $hlp->__('Recipient Address'));
-        $snippets->addVar('email', $hlp->__('Recipient Email'));
-
-        // requires version 1.6 of sales rule (magento 1.7)
-        if (version_compare(Mage::getConfig()->getModuleConfig('Mage_SalesRule')->version, '1.6.0') >= 0) {
-            $snippets->addSnippets(
-                'mage.coupon',
-                '{{coupon rule="${1:1}" length="${2:8}" expire="${3:120}" prefix="${4:ABC-}" }}',
-                $hlp->__('Coupon Code'),
-                $hlp->__('Generates a coupon code for the specifed shopping cart price rule.')
-            );
-        }
+    public function getUtmMedium()
+    {
+        return $this->getMediumId();
     }
 
     /**
@@ -66,72 +53,10 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
      */
     public function prepareRecipient(Mzax_Emarketing_Model_Recipient $recipient)
     {
-        $recipient->setAddress($recipient->getEmail());
+        $recipient->setAddress($recipient->getTelephone());
 
         $recipient->addUrl('unsubscribe', 'mzax_emarketing/unsubscribe');
         $recipient->addUrl('browser_view', 'mzax_emarketing/email');
-    }
-
-    /**
-     * Prepare campaign tabs
-     *
-     * @see Mzax_Emarketing_Model_Medium_Abstract::prepareCampaignTabs()
-     * @param Mzax_Emarketing_Block_Campaign_Edit_Tabs $tabs
-     *
-     * @return void
-     */
-    public function prepareCampaignTabs(Mzax_Emarketing_Block_Campaign_Edit_Tabs $tabs)
-    {
-        /* @var $campaign  Mzax_Emarketing_Model_Campaign */
-        $campaign = Mage::registry('current_campaign');
-
-        if ($count = $campaign->countInbox()) {
-            $tabs->addTab('inbox', array(
-                'label'   => $tabs->__('Inbox (%s)', $count),
-                'class'   => 'ajax',
-                'url'     => $tabs->getUrl('*/emarketing_inbox/campaignGrid', array('_current' => true)),
-            ));
-        }
-
-        if ($count = $campaign->countOutbox()) {
-            $tabs->addTab('outbox', array(
-                'label'   => $tabs->__('Outbox (%s)', $count),
-                'class'   => 'ajax',
-                'url'     => $tabs->getUrl('*/emarketing_outbox/campaignGrid', array('_current' => true)),
-            ));
-        }
-    }
-
-    /**
-     * Init settings form
-     *
-     * @param Varien_Data_Form $form
-     * @param Mzax_Emarketing_Model_Campaign $campaign
-     */
-    public function initSettingsForm(Varien_Data_Form $form, Mzax_Emarketing_Model_Campaign $campaign)
-    {
-        $helper = Mage::helper('mzax_emarketing');
-
-        $fieldset = $form->addFieldset('email_options', array(
-            'legend'   => $helper->__('Email Specific Options')
-        ), 'base_fieldset');
-
-        $fieldset->addField('prerender', 'select', array(
-            'label'     => $helper->__('Pre-Render'),
-            'note'      => $helper->__("If enabled, email will get pre rendered, cached and then only the basic {{var}} expressions will get parsed. If your content is static or only uses var expressions. Enabling this can increase the render performance."),
-            'name'      => 'medium_data[prerender]',
-            'options'   => array(
-                '0' => $helper->__('Disabled'),
-                '1' => $helper->__('Enabled'),
-            ),
-            'value' => 0
-        ));
-
-        $fieldset->addField('forward_emails', 'text', array(
-            'name'      => 'medium_data[forward_emails]',
-            'label'     => $helper->__('Forward Email'),
-            'note'      => $helper->__("All non-auto email replies will get forward to this email address.")
-        ));
     }
 
     /**
@@ -240,11 +165,17 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
         $recipient->prepare();
 
         if (!$recipient->getAddress()) {
-            throw new Exception("No address set");
+            Mage::throwException("No telephone set");
+        }
+        if (!preg_match(self::TELEPHONE_REGEXP, $recipient->getAddress())) {
+            $message = Mage::helper('mzax_emarketing')
+                ->__('Wrong telephone number %s', $recipient->getAddress());
+            Mage::throwException($message);
         }
 
         /* @var $email Mzax_Emarketing_Model_Outbox_Email */
-        $email = Mage::getModel('mzax_emarketing/outbox_email');
+        $email = Mage::getModel('mzax_emarketing/outbox_sms');
+        $email->setDefaultTransporter($this->_defaultTransporter);
         $email->setTo($recipient->getAddress());
         $email->setRecipient($recipient);
         $email->render();
@@ -271,36 +202,6 @@ class Mzax_Emarketing_Model_Medium_Email extends Mzax_Emarketing_Model_Medium_Ab
         // if mock, send out email straight away
         if ($recipient->isMock() && !$recipient->getData('skip_send')) {
             $email->send();
-        }
-    }
-
-    /**
-     * Unsubscribe email from all stores for any given reason
-     *
-     * @todo Can be done better...
-     * @param string $email
-     * @param string $reason Reason for log purpose only
-     */
-    public function unsubscribe($email, $reason)
-    {
-        /* @var $helper Mzax_Emarketing_Helper_Newsletter */
-        $helper = Mage::helper('mzax_emarketing/newsletter');
-
-        /* @var $store Mage_Core_Model_Store */
-        foreach (Mage::app()->getStores() as $store) {
-            $subscriber = $helper->unsubscribe($email, $store->getId(), false);
-            if ($subscriber->getIsStatusChanged()) {
-                Mage::log(
-                    sprintf(
-                        "unsubscribe '%s' from store '%s': %s",
-                        $email,
-                        $store->getName(),
-                        $reason
-                    ),
-                    null,
-                    'mzax_email_unsubscribe.log'
-                );
-            }
         }
     }
 }

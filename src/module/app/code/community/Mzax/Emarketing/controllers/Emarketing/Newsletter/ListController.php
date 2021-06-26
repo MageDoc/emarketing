@@ -117,13 +117,41 @@ class Mzax_Emarketing_Emarketing_Newsletter_ListController extends Mzax_Emarketi
         $session = $this->_getSession();
         $request = $this->getRequest();
         $data = $request->getPost();
-        if (!$data) {
+        $customerId = $this->getRequest()->getParam('customer_id');
+        if (!$data && !$customerId) {
             $this->_redirect('*/*');
             return;
         }
 
         $list = $this->_initList();
         $subscribers = $request->getPost('subscriber');
+        if (!$subscribers
+            && $customerId
+            && ($customer = Mage::getModel('customer/customer')->load($customerId))
+            && $customer->getId()){
+
+            $subscriber = Mage::getModel('newsletter/subscriber')
+                ->loadByCustomer($customer);
+            if (!$subscriber->getId()){
+                $customer->setIsSubscribed(true);
+                //$customerId->setConfirmation(true);
+                $subscriber->subscribeCustomer($customer);
+                $subscriber->setStatus(Mage_Newsletter_Model_Subscriber::STATUS_UNCONFIRMED);
+                $subscriber->save();
+            }
+
+            if ($subscriber->getId()){
+                $subscribers = $subscriber->getId();
+            }
+
+            Mage::dispatchEvent(
+                'mzax_emarketing_list_user_subscribe',
+                array(
+                    'customer' => $customer,
+                    'subscriber' => $subscriber
+                )
+                );
+        }
 
         try {
             $list->addSubscribers($subscribers);
@@ -136,11 +164,13 @@ class Mzax_Emarketing_Emarketing_Newsletter_ListController extends Mzax_Emarketi
             }
         }
 
-        if ($request->getParam('src') === 'newsletter') {
-            $this->_redirect('*/newsletter_subscriber');
-            return;
+        if (!$request->getParam('is_ajax')){
+            if ($request->getParam('src') === 'newsletter') {
+                $this->_redirect('*/newsletter_subscriber');
+                return;
+            }
+            $this->_redirect('*/*/edit', array('_current'=>true, 'tab' => 'subscribers'));
         }
-        $this->_redirect('*/*/edit', array('_current'=>true, 'tab' => 'subscribers'));
     }
 
     /**

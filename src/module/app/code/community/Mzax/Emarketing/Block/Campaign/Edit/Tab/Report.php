@@ -338,7 +338,7 @@ class Mzax_Emarketing_Block_Campaign_Edit_Tab_Report extends Mage_Adminhtml_Bloc
         $js = <<<JS
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
-    google.load("visualization", "1", {packages:["corechart"], language:'$locale'});
+    google.load("visualization", "1", {packages:["corechart", "geochart"], language:'$locale'});
 </script>
 JS;
         return $this->getLayout()->createBlock('core/text')->setText($js);

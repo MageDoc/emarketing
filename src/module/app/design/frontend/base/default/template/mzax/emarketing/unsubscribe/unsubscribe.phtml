@@ -31,7 +31,7 @@ $lists = $this->getNewsletterLists();
                 <input type="hidden" name="email" value="<?php echo $this->getAddress() ?>" />
                 <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
 
-                <h2 class="legend">Newsletter Lists</h2>
+                <h2 class="legend"><?php echo $this->__('Newsletter Lists') ?></h2>
                 <p><?php echo $this->__('Here you can update the newsletter preferences for <strong>%s</strong>.', $this->escapeHtml($this->getAddress())) ?></p>
                 <p><?php echo $this->__('Choose the lists that you are interested in and click update to change your preferences.') ?></p>
                 <ul class="form-list">
@@ -49,7 +49,7 @@ $lists = $this->getNewsletterLists();
         </form>
     <?php endif ?>
 
-    <h2 class="legend">Unsubscribe from Newsletter</h2>
+    <h2 class="legend"><?php echo $this->__('Unsubscribe from Newsletter')?></h2>
     <p><?php echo $this->__('If you want to unsubscribe <strong>%s</strong> from all our newsletter, click bellow', $this->escapeHtml($this->getAddress())) ?></p>
     <form id="unsubscribe" action="<?php echo $this->getYesUrl() ?>" method="post">
         <div class="fieldset">

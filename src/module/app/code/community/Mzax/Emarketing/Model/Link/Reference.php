@@ -35,6 +35,8 @@
 class Mzax_Emarketing_Model_Link_Reference extends Mzax_Emarketing_Model_AbstractModel
 {
     const CONFIG_ENABLE_GA = 'mzax_emarketing/google_analytics/enable';
+    const DEFAULT_LINK_COMPRESSION = 2;
+    const DEFAULT_LINK_PREFIX = 'link-goto/';
 
     /**
      * Prefix of model events names
@@ -112,10 +114,15 @@ class Mzax_Emarketing_Model_Link_Reference extends Mzax_Emarketing_Model_Abstrac
     {
         /** @var Mzax_Emarketing_Helper_Data $helper */
         $helper = Mage::helper('mzax_emarketing');
+        $linkCompression = $this->getRecipient()
+            && $this->getCampaign()->getMedium()->getLinkCompression()
+            ? $this->getCampaign()->getMedium()->getLinkCompression()
+            : self::DEFAULT_LINK_COMPRESSION;
 
         return $helper->randomHash(
             $link->getId() .
-            $link->getLinkHash()
+            $link->getLinkHash(),
+            $linkCompression
         );
     }
 
@@ -247,7 +254,10 @@ class Mzax_Emarketing_Model_Link_Reference extends Mzax_Emarketing_Model_Abstrac
     public function getRedirectUrl($params = array())
     {
         $store = $this->getCampaign()->getStore();
-        $url = $store->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . "link-goto/".$this->getPublicId();
+        $linkPrefix = $this->getCampaign()->getMedium()->getLinkPrefix()
+            ? $this->getCampaign()->getMedium()->getLinkPrefix()
+            : self::DEFAULT_LINK_PREFIX;
+        $url = $store->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . $linkPrefix.$this->getPublicId();
 
         if (!empty($params)) {
             $url .= '?' . http_build_query($params);
@@ -309,7 +319,9 @@ class Mzax_Emarketing_Model_Link_Reference extends Mzax_Emarketing_Model_Abstrac
      */
     public function getUtmMedium()
     {
-        return$this->_config->get(
+        return $this->getCampaign()->getMedium()->getUtmMedium()
+            ? $this->getCampaign()->getMedium()->getUtmMedium()
+            : $this->_config->get(
             'mzax_emarketing/google_analytics/utm_medium',
             $this->getCampaign()->getStoreId()
         );

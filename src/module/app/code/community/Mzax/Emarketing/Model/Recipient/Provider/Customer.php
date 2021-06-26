@@ -51,6 +51,10 @@ class Mzax_Emarketing_Model_Recipient_Provider_Customer
         $recipient->setCustomer($customer);
         $recipient->setEmail($customer->getEmail());
         $recipient->setName($customer->getName());
+
+        if ($address = $customer->getDefaultShippingAddress()){
+            $recipient->setTelephone($address->getTelephone());
+        }
     }
 
     /**
