@@ -79,6 +79,7 @@ class Mzax_Emarketing_Block_Outbox_Grid extends Mage_Adminhtml_Block_Widget_Grid
         $this->addColumn('recipient', array(
             'header'         => $this->__('Recipient'),
             'index'          => 'to',
+            'filter_index'   => 'main_table.to',
             'frame_callback' => array($this, 'addObjectLink'),
         ));
 
