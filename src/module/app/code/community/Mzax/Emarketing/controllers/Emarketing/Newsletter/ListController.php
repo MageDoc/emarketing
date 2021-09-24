@@ -307,7 +307,16 @@ class Mzax_Emarketing_Emarketing_Newsletter_ListController extends Mzax_Emarketi
     protected function _isAllowed()
     {
         $session = $this->_sessionManager->getAdminSession();
+        $action = strtolower($this->getRequest()->getActionName());
+        $aclResource = 'promo/emarketing/newsletter_list';
+        $isAllowed = $session->isAllowed($aclResource);
 
-        return $session->isAllowed('promo/emarketing/newsletter_list');
+        switch ($action) {
+            case 'massadd':
+                $aclResource = 'promo/emarketing/newsletter_list_add';
+                break;
+        }
+
+        return $isAllowed || $session->isAllowed($aclResource);
     }
 }

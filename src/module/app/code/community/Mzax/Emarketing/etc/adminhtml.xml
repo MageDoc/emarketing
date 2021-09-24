@@ -63,6 +63,10 @@
 							<sort_order>40</sort_order>
 							<action>adminhtml/emarketing_newsletter_list/index</action>
 						</newsletter_list>
+						<newsletter_list_add_subscriber translate="title" module="mzax_emarketing">
+							<title>Add Subscriber to Newsletter Lists</title>
+							<sort_order>50</sort_order>
+						</newsletter_list_add_subscriber>
 						<settings translate="title" module="mzax_emarketing">
 							<title>Configuration</title>
 							<sort_order>1000</sort_order>
