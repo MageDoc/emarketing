@@ -313,7 +313,7 @@ class Mzax_Emarketing_Emarketing_Newsletter_ListController extends Mzax_Emarketi
 
         switch ($action) {
             case 'massadd':
-                $aclResource = 'promo/emarketing/newsletter_list_add';
+                $aclResource = 'promo/emarketing/newsletter_list_add_subscriber';
                 break;
         }
 
