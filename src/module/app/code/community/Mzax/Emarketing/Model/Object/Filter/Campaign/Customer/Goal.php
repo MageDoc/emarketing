@@ -72,8 +72,8 @@ class Mzax_Emarketing_Model_Object_Filter_Campaign_Customer_Goal
                 $query->addBinding('goal_time', 'campaign_recepient.sent_at');
                 break;
             case self::ACTION_VIEWED:
-                $query->where($this->getTimeRangeExpr('{campaign_recipient_sent_at}', 'campaign_event_date', false));
-                $query->addBinding('goal_time', 'campaign_recepient.sent_at');
+                $query->where($this->getTimeRangeExpr('{campaign_recipient_viewed_at}', 'campaign_event_date', false));
+                $query->addBinding('goal_time', 'campaign_recepient.viewed_at');
                 break;
             case self::ACTION_CLICKED:
                 switch ($action) {
@@ -93,7 +93,7 @@ class Mzax_Emarketing_Model_Object_Filter_Campaign_Customer_Goal
                     'campaign_event'
                 );
 
-                $eventTime = '`campaign_event`.`captured_at`';
+                $eventTime = 'campaign_event.captured_at';
                 $query->where($this->getTimeRangeExpr($eventTime, 'campaign_event_date', false));
                 $query->addBinding('goal_time', $eventTime);
             default:
