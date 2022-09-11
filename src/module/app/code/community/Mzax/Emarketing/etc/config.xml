@@ -194,6 +194,7 @@
                 <product_category><model>mzax_emarketing/object_filter_product_category</model></product_category>
                 <product_attribute><model>mzax_emarketing/object_filter_product_attribute</model></product_attribute>
                 <campaign_goal><model>mzax_emarketing/object_filter_campaign_goal</model></campaign_goal>
+                <customer_campaign_goal><model>mzax_emarketing/object_filter_campaign_customer_goal</model></customer_campaign_goal>
             </filters>
             <goal_types>
                 <orders><model>mzax_emarketing/conversion_goal_orders</model></orders>
